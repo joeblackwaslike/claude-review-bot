@@ -1,5 +1,6 @@
 # claude-review-bot
 
+[![Docs](https://img.shields.io/badge/docs-online-blue)](https://joeblackwaslike.github.io/claude-review-bot/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen)](package.json)
 [![Deploy](https://img.shields.io/badge/deploy-vercel-black?logo=vercel)](https://vercel.com/joe-blacks-projects/claude-review-bot)
@@ -7,6 +8,8 @@
 **claude-review-bot** is a GitHub App that posts AI-powered code reviews when you comment `/claude-review` on a pull request. It runs on Vercel, uses Anthropic's Claude SDK, and submits structured reviews with inline comments anchored to the actual diff.
 
 Unlike single-prompt review bots, it runs **five specialized agents in parallel** — each focused on a different review framework — then merges their findings into a single deduplicated review.
+
+> **[Full documentation →](https://joeblackwaslike.github.io/claude-review-bot/)**
 
 ## How it works
 

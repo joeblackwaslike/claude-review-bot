@@ -1,3 +1,4 @@
+import { waitUntil } from "@vercel/functions";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { getGitHubApp } from "../../src/github-app.js";
 import { readRawBody } from "../../src/http.js";
@@ -34,18 +35,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 	}
 
 	// Acknowledge immediately — GitHub requires a response well before our
-	// 5-agent review completes. Processing is fire-and-forget; Vercel keeps
-	// the function alive until the event loop drains.
+	// 5-agent review completes. waitUntil() tells Vercel to keep the function
+	// alive until the processing promise resolves, even after the response is sent.
 	res.status(202).json({ ok: true });
 
-	app.webhooks
-		.verifyAndReceive({
-			id: deliveryId,
-			name: eventName as never,
-			signature,
-			payload,
-		})
-		.catch((error) => {
-			console.error("Webhook processing failed", { deliveryId, eventName, error });
-		});
+	waitUntil(
+		app.webhooks
+			.verifyAndReceive({
+				id: deliveryId,
+				name: eventName as never,
+				signature,
+				payload,
+			})
+			.catch((error) => {
+				console.error("Webhook processing failed", { deliveryId, eventName, error });
+			}),
+	);
 }

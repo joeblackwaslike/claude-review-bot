@@ -18,6 +18,7 @@
 	},
 	"dependencies": {
 		"@anthropic-ai/sdk": "^0.39.0",
+		"@vercel/functions": "^3.4.4",
 		"@vercel/node": "^3.2.25",
 		"octokit": "^4.0.2"
 	},

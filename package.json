@@ -1,0 +1,27 @@
+{
+	"name": "claude-review-bot",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"engines": {
+		"node": ">=20"
+	},
+	"scripts": {
+		"dev": "vercel dev",
+		"build": "tsc --noEmit",
+		"typecheck": "tsc --noEmit",
+		"lint": "biome check .",
+		"test": "vitest run"
+	},
+	"dependencies": {
+		"@anthropic-ai/sdk": "^0.39.0",
+		"@vercel/node": "^3.2.25",
+		"octokit": "^4.0.2"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.4.12",
+		"@types/node": "^22.15.3",
+		"typescript": "^5.8.3",
+		"vitest": "^3.2.4"
+	}
+}

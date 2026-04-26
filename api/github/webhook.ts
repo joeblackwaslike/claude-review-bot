@@ -28,7 +28,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
 	// Verify signature before acknowledging so we don't ack forged requests.
 	const app = getGitHubApp();
-	const valid = await app.webhooks.verify(payload, signature).catch(() => false);
+	const valid = await app.webhooks
+		.verify(payload, signature)
+		.catch(() => false);
 	if (!valid) {
 		res.status(400).json({ error: "Invalid webhook signature" });
 		return;
@@ -48,7 +50,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 				payload,
 			})
 			.catch((error) => {
-				console.error("Webhook processing failed", { deliveryId, eventName, error });
+				console.error("Webhook processing failed", {
+					deliveryId,
+					eventName,
+					error,
+				});
 			}),
 	);
 }

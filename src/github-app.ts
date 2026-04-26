@@ -75,10 +75,12 @@ export async function maybeSubmitReview(args: {
 	} = args;
 
 	if (!config.reviewEnabled) {
+		console.log("review skipped: REVIEW_ENABLED is not set to true");
 		return;
 	}
 
 	if (pullRequest.draft) {
+		console.log("review skipped: pull request is a draft");
 		return;
 	}
 

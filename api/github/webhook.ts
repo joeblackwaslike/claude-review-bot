@@ -22,20 +22,30 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 		return;
 	}
 
-	try {
-		const body = await readRawBody(req);
-		const app = getGitHubApp();
+	const body = await readRawBody(req);
+	const payload = body.toString("utf8");
 
-		await app.webhooks.verifyAndReceive({
+	// Verify signature before acknowledging so we don't ack forged requests.
+	const app = getGitHubApp();
+	const valid = await app.webhooks.verify(payload, signature).catch(() => false);
+	if (!valid) {
+		res.status(400).json({ error: "Invalid webhook signature" });
+		return;
+	}
+
+	// Acknowledge immediately — GitHub requires a response well before our
+	// 5-agent review completes. Processing is fire-and-forget; Vercel keeps
+	// the function alive until the event loop drains.
+	res.status(202).json({ ok: true });
+
+	app.webhooks
+		.verifyAndReceive({
 			id: deliveryId,
 			name: eventName as never,
 			signature,
-			payload: body.toString("utf8"),
+			payload,
+		})
+		.catch((error) => {
+			console.error("Webhook processing failed", { deliveryId, eventName, error });
 		});
-
-		res.status(202).json({ ok: true });
-	} catch (error) {
-		console.error("Webhook handling failed", error);
-		res.status(500).json({ error: "Webhook handling failed" });
-	}
 }
